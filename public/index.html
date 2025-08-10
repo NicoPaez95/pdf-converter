@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conversor Universal</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./converter.js"></script>
+
+</head>
+
+<body>
+  <!-- Contenedor principal del conversor / Main converter container -->
+  <div class="converter">
+    <h2>Conversor de Archivos</h2>
+
+    <!-- Formulario principal de conversión / Main conversion form -->
+    <form id="convertForm" action="/convert" method="POST" enctype="multipart/form-data">
+      <label for="fromFormat">Convertir de:</label>
+      <select name="fromFormat" id="fromFormat" required>
+        <option value="word">Word</option>
+        <option value="pdf">PDF</option>
+        <option value="image">Imagen</option>
+      </select>
+
+      <!-- Botón de intercambio de formatos / Swap formats button -->
+      <button type="button" id="swap" title="Intercambiar formatos">⇄</button>
+
+      <label for="toFormat">A formato:</label>
+      <select name="to" id="toFormat" required>
+        <option value="pdf">PDF</option>
+        <option value="image">Imagen</option>
+        <option value="word">Word</option>
+      </select>
+
+      <!-- Selector de archivo / File input -->
+      <input type="file" name="file" id="fileInput" required accept=".doc,.docx,.png,.jpg,.jpeg,.gif,.bmp,.webp,.pdf" />
+
+      <!-- Botón para enviar / Submit button -->
+      <button type="submit" id="submitBtn">Convertir</button>
+
+      <!-- Mensaje de error / Error message -->
+      <div id="message"></div>
+    </form>
+  </div>
+
+  <!-- Pie de página / Footer -->
+  <footer>
+    Desarrollado por <strong>Jose Nicolas Paez</strong> © 2024
+    <a href="https://github.com/tuperfil" target="_blank">Sobre el desarrollador</a>
+  </footer>
+
+  <!-- Script principal / Main script -->
+  <script>
+    const from = document.getElementById('fromFormat');
+    const to = document.getElementById('toFormat');
+    const swapBtn = document.getElementById('swap');
+    const fileInput = document.getElementById('fileInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const message = document.getElementById('message');
+
+    // Definición de conversiones válidas / Valid conversion map
+    const validConversions = {
+      word: ['pdf'],
+      image: ['pdf'],
+      pdf: ['image', 'word']
+    };
+
+    // Actualiza las opciones disponibles en el segundo select / Update "to" options
+    function actualizarOpcionesTo() {
+      const fromVal = from.value;
+      for (let option of to.options) option.disabled = true;
+      validConversions[fromVal].forEach(valid => {
+        for (let option of to.options) {
+          if (option.value === valid) option.disabled = false;
+        }
+      });
+      if (to.options[to.selectedIndex].disabled) {
+        for (let option of to.options) {
+          if (!option.disabled) {
+            to.value = option.value;
+            break;
+          }
+        }
+      }
+    }
+
+    // Cambia el atributo accept del input según el formato origen / Adjust accept attribute
+    function actualizarAcceptFile() {
+      const fromVal = from.value;
+      let accept = '';
+      if (fromVal === 'word') accept = '.doc,.docx';
+      else if (fromVal === 'image') accept = '.png,.jpg,.jpeg,.gif,.bmp,.webp';
+      else if (fromVal === 'pdf') accept = '.pdf';
+      fileInput.setAttribute('accept', accept);
+    }
+
+    // Verifica si el archivo seleccionado es válido / Validate selected file
+    function validarArchivo() {
+      message.textContent = '';
+      const file = fileInput.files[0];
+      if (!file) return true;
+      const fromVal = from.value;
+      const ext = file.name.split('.').pop().toLowerCase();
+      const allowedExt = {
+        word: ['doc', 'docx'],
+        image: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'],
+        pdf: ['pdf']
+      };
+      if (!allowedExt[fromVal].includes(ext)) {
+        message.textContent = 'Archivo inválido para el formato seleccionado.';
+        submitBtn.disabled = true;
+        return false;
+      }
+      submitBtn.disabled = false;
+      return true;
+    }
+
+    // Intercambia los formatos / Swap formats
+    swapBtn.addEventListener('click', () => {
+      const temp = from.value;
+      from.value = to.value;
+      to.value = temp;
+      actualizarOpcionesTo();
+      actualizarAcceptFile();
+      validarArchivo();
+    });
+
+    from.addEventListener('change', () => {
+      actualizarOpcionesTo();
+      actualizarAcceptFile();
+      validarArchivo();
+    });
+
+    to.addEventListener('change', validarArchivo);
+    fileInput.addEventListener('change', validarArchivo);
+
+    // Inicialización / Initial setup
+    actualizarOpcionesTo();
+    actualizarAcceptFile();
+  </script>
+</body>
+
+</html>
