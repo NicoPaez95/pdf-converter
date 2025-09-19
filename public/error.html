@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error en Conversión - Conversor Universal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .error-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .error-icon {
+            font-size: 60px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #dc3545;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .error-details {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .support {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="logo">Conversor Universal</div>
+        <div class="error-icon">⚠️</div>
+        <h1>Error en la Conversión</h1>
+        <p>Lo sentimos, ha ocurrido un error al procesar tu archivo. Por favor, intenta nuevamente.</p>
+        
+        <div class="error-details" id="errorDetails">
+            Mensaje de error no disponible
+        </div>
+        
+        <a href="/" class="btn">Volver al Conversor</a>
+    
+    </div>
+
+    <script>
+        // Obtener el mensaje de error de la URL si está presente
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMessage = urlParams.get('message');
+            
+            if (errorMessage) {
+                document.getElementById('errorDetails').textContent = decodeURIComponent(errorMessage);
+            }
+        });
+    </script>
+</body>
+</html>

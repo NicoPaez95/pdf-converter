@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error del Servidor - Conversor Universal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .error-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .error-icon {
+            font-size: 60px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        
+        .error-code {
+            font-size: 80px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            color: #dc3545;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .error-details {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .support {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+            padding-top: 15px;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #343a40;
+        }
+        
+        .button-group {
+            margin-top: 20px;
+        }
+        
+        .technical-info {
+            background-color: #e9ecef;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #495057;
+        }
+        
+        .reload-btn {
+            background-color: #28a745;
+        }
+        
+        .reload-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="logo">Conversor Universal</div>
+        <div class="error-icon">🚨</div>
+        <div class="error-code">500</div>
+        <h1>Error Interno del Servidor</h1>
+        <p>Lo sentimos, ha ocurrido un error interno en el servidor. Por favor, intenta nuevamente.</p>
+        
+        <div class="error-details" id="errorDetails">
+            Cargando detalles del error...
+        </div>
+        
+        <div class="button-group">
+            <a href="/" class="btn">Volver al Inicio</a>
+            <a href="javascript:location.reload()" class="btn reload-btn">Reintentar</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Volver Atrás</a>
+        </div>
+        
+
+        
+        <div class="technical-info">
+            Error ID: <span id="errorId"></span> | 
+            Timestamp: <span id="timestamp"></span>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar detalles del error y información técnica
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMessage = urlParams.get('message');
+            const errorDetails = document.getElementById('errorDetails');
+            const errorId = document.getElementById('errorId');
+            const timestamp = document.getElementById('timestamp');
+            
+            // Generar ID de error único
+            const generatedErrorId = 'ERR_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            errorId.textContent = generatedErrorId;
+            
+            // Establecer timestamp
+            timestamp.textContent = new Date().toLocaleString();
+            
+            // Mostrar mensaje de error si está disponible
+            if (errorMessage) {
+                errorDetails.textContent = decodeURIComponent(errorMessage);
+            } else {
+                errorDetails.textContent = 'No se proporcionaron detalles específicos del error.';
+            }
+            
+            // Opcional: Enviar reporte de error al servidor
+            try {
+                fetch('/api/error-log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        errorId: generatedErrorId,
+                        errorMessage: errorMessage,
+                        url: window.location.href,
+                        timestamp: new Date().toISOString()
+                    })
+                }).catch(err => console.log('Error logging disabled'));
+            } catch (e) {
+                console.log('Error reporting not available');
+            }
+        });
+    </script>
+</body>
+</html>

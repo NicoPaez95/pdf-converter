@@ -11,10 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const message = document.getElementById('message');
 
     // Definición de conversiones válidas / Valid conversion map
+    // NOTA: Se elimina la conversión de PDF a Word por problemas técnicos
     const validConversions = {
         word: ['pdf'],
         image: ['pdf'],
-        pdf: ['image', 'word']
+        pdf: ['image'] // Eliminado 'word' por problemas de conversión
     };
 
     // Actualiza las opciones disponibles en el segundo select / Update "to" options
