@@ -1,5 +1,5 @@
 //index.js
-//Módulos requeridos / Required modules
+//Required modules/Módulos requeridos / 
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
@@ -11,14 +11,14 @@ const archiver = require("archiver");
 const app = express();
 const PORT = 3000;
 
-// Crear carpetas si no existen / Create directories if not exist
+//Create directories if not exist/ Crear carpetas si no existen  
 const uploadDir = path.join(__dirname, "uploads");
 const outputDir = path.join(__dirname, "outputs");
 [uploadDir, outputDir].forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
 
-// Configuración de almacenamiento con Multer / Multer storage setup
+//  Multer storage setup/Configuración de almacenamiento con Multer
 const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (req, file, cb) => {
@@ -28,70 +28,70 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Servir archivos estáticos desde la carpeta public
+// // Serve static files from the public folder/Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, "public")));
 
-// Ruta para la página de error
+//Route for the error page/ Ruta para la página de error
 app.get("/error.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "error.html"));
 });
 
-// Ruta para la página 500
+// Route for the 500 page/ Ruta para la página 500
 app.get("/500.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "500.html"));
 });
 
-// Ruta para la página 404
+// Route for the 404 page/ Ruta para la página 404
 app.get("/404.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-// Ruta principal - servir el index.html
+// Main route - serve index.html/ Ruta principal - servir el index.html
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Ruta para probar errores manualmente
+/// Route to test errors manually/ Ruta para probar errores manualmente
 app.get("/test-error", (req, res) => {
   const errorMessage = encodeURIComponent("Este es un error forzado para pruebas");
   res.redirect(`/error.html?message=${errorMessage}`);
 });
 
-// Ruta para probar errores 500 manualmente
+// Route to test 500 errors manually/ Ruta para probar errores 500 manualmente
 app.get("/test-500", (req, res) => {
   // Forzar un error
   throw new Error("Este es un error de prueba 500 forzado desde el servidor");
 });
 
-// Ruta para probar errores 500 asíncronos
+//Route to test asynchronous 500 errors/ Ruta para probar errores 500 asíncronos
 app.get("/test-async-error", async (req, res, next) => {
   try {
-    // Simular una operación asíncrona que falla
+    // Simulate an asynchronous operation that fails/Simular una operación asíncrona que falla
     await Promise.reject(new Error("Error asíncrono de prueba"));
   } catch (error) {
-    next(error); // Pasar el error al middleware de manejo de errores
+    next(error); // Pasar el error al middleware de manejo de errores/Simulate an asynchronous operation that fails
   }
 });
 
-// Ruta para log de errores (opcional)
+// Simulate an asynchronous operation that fails/Ruta para log de errores (opcional)
 app.post("/api/error-log", express.json(), (req, res) => {
   console.log("📝 Error reportado:", req.body);
   res.status(200).send({ status: "logged" });
 });
 
-// Enviar archivo y limpiar / Send file and clean up
+// / Send file and clean up/Enviar archivo y limpiar 
 function sendFileAndCleanup(res, outputPath, inputPath, originalName, toFormat, extraPaths = []) {
-  // Generar un nombre de archivo más amigable
-  const baseName = path.parse(originalName).name; // Obtener el nombre sin extensión
+  // Generate a more user-friendly file name/Generar un nombre de archivo más amigable
+  const baseName = path.parse(originalName).name; //Get the name without the extension/ Obtener el nombre sin extensión
   let extension;
-  
-  // Determinar la extensión según el formato de destino
-  switch(toFormat) {
+
+  //Determine the file extension according to the target format./ Determinar la extensión según el formato de destino
+  switch (toFormat) {
     case 'pdf':
       extension = '.pdf';
       break;
     case 'image':
-      extension = '.zip'; // Ya que es un zip de imágenes
+      extension = '.zip'; //Since it's a ZIP file of images/ Ya que es un zip de imágenes
       break;
     case 'word':
       extension = '.docx';
@@ -99,13 +99,13 @@ function sendFileAndCleanup(res, outputPath, inputPath, originalName, toFormat, 
     default:
       extension = path.extname(outputPath);
   }
-  
+
   const friendlyName = `Convertido_${baseName}${extension}`;
-  
-  // Configurar headers para la descarga
+
+  //Configure headers for download/ Configurar headers para la descarga
   res.setHeader('Content-Disposition', `attachment; filename="${friendlyName}"`);
-  
-  // Enviar el archivo
+
+  // Send the file/Enviar el archivo
   res.sendFile(outputPath, err => {
     if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
     if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
@@ -114,7 +114,7 @@ function sendFileAndCleanup(res, outputPath, inputPath, originalName, toFormat, 
   });
 }
 
-// Ruta principal de conversión / Main conversion route
+// Main conversion route/ Ruta principal de conversión
 app.post("/convert", upload.single("file"), async (req, res, next) => {
   if (!req.file) {
     const errorMessage = encodeURIComponent("No se subió ningún archivo. / No file uploaded.");
@@ -132,16 +132,16 @@ app.post("/convert", upload.single("file"), async (req, res, next) => {
   const pdftoppm = isWin ? "C:\\poppler-24\\bin\\pdftoppm.exe" : "pdftoppm";
 
   try {
-    // Verificar si la conversión es válida (protección adicional en el backend)
+    // Verify that the conversion is valid (additional protection on the backend)/Verificar si la conversión es válida (protección adicional en el backend)
     const validConversions = {
       word: ['pdf'],
       image: ['pdf'],
-      pdf: ['image'] // Eliminado 'word' por problemas de conversión
+      pdf: ['image'] //Removed 'word' due to conversion issues/ Eliminado 'word' por problemas de conversión
     };
-    
+
     if (!validConversions[from] || !validConversions[from].includes(to)) {
       fs.unlinkSync(filePath);
-      // Redirigir a la página de error
+      // Redirect to the error page/Redirigir a la página de error
       const errorMessage = encodeURIComponent("Conversión no soportada. / Conversion not supported.");
       return res.redirect(`/error.html?message=${errorMessage}`);
     }
@@ -189,17 +189,17 @@ app.post("/convert", upload.single("file"), async (req, res, next) => {
       return;
     }
 
-    // Conversión no soportada / Unsupported conversion
+    //  Unsupported conversion/Conversión no soportada
     fs.unlinkSync(filePath);
     const errorMessage = encodeURIComponent("Conversión no soportada. / Conversion not supported.");
     return res.redirect(`/error.html?message=${errorMessage}`);
   } catch (err) {
-    // Pasar el error al middleware de manejo de errores
+    // Send the error to the error management middleware. / Pasar el error al middleware de manejo de errores
     next(err);
   }
 });
 
-// Ejecutar comandos con promesas / Run command as promise
+// Run command as promise/Ejecutar comandos con promesas / 
 function execPromise(command) {
   return new Promise((resolve, reject) => {
     exec(command, (err, stdout, stderr) => {
@@ -209,26 +209,26 @@ function execPromise(command) {
   });
 }
 
-// Manejo de rutas no encontradas (404) - debe ir después de todas las rutas definidas
+// Handling 404 (not found) routes - this should be placed after all other defined routes./Manejo de rutas no encontradas (404) - debe ir después de todas las rutas definidas
 app.use((req, res, next) => {
   res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-// Manejo de errores de servidor (500) - debe ir al final de todo
+// Handling server errors (500) - this should be placed at the very end./Manejo de errores de servidor (500) - debe ir al final de todo
 app.use((error, req, res, next) => {
   console.error('💥 Error del servidor:', error);
-  
-  // Limpiar archivos temporales en caso de error
+
+  // Clean temporary files in case of error/Limpiar archivos temporales en caso de error
   if (req.file && fs.existsSync(req.file.path)) {
     fs.unlinkSync(req.file.path);
   }
-  
-  // Determinar el tipo de error y redirigir accordingly
+
+  // Determine the type of error and redirect accordingly./Determinar el tipo de error y redirigir accordingly
   if (error.status === 404) {
     return res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
   }
-  
-  // Para otros errores, usar la página 500
+
+  // For other errors, use page 500./Para otros errores, usar la página 500
   const errorMessage = encodeURIComponent(error.message || 'Error interno del servidor');
   res.status(500).redirect(`/500.html?message=${errorMessage}`);
 });

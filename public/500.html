@@ -162,7 +162,7 @@
     </div>
 
     <script>
-        // Mostrar detalles del error y información técnica
+        //Display error details and technical information/ Mostrar detalles del error y información técnica
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const errorMessage = urlParams.get('message');
@@ -170,21 +170,21 @@
             const errorId = document.getElementById('errorId');
             const timestamp = document.getElementById('timestamp');
             
-            // Generar ID de error único
+            // Generate a unique error ID/ Generar ID de error único
             const generatedErrorId = 'ERR_' + Math.random().toString(36).substr(2, 9).toUpperCase();
             errorId.textContent = generatedErrorId;
             
-            // Establecer timestamp
+            // // Set timestamp/ Establecer timestamp
             timestamp.textContent = new Date().toLocaleString();
             
-            // Mostrar mensaje de error si está disponible
+            // Display error message if available/ Mostrar mensaje de error si está disponible
             if (errorMessage) {
                 errorDetails.textContent = decodeURIComponent(errorMessage);
             } else {
                 errorDetails.textContent = 'No se proporcionaron detalles específicos del error.';
             }
             
-            // Opcional: Enviar reporte de error al servidor
+            //Optional: Send error report to the server/ Opcional: Enviar reporte de error al servidor
             try {
                 fetch('/api/error-log', {
                     method: 'POST',

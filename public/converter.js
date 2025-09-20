@@ -1,7 +1,7 @@
 // converter.js
 // Script principal / Main script
 
-// Esperar a que el DOM esté completamente cargado
+// // Wait for the DOM to be fully loaded / Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     const from = document.getElementById('fromFormat');
     const to = document.getElementById('toFormat');
@@ -11,30 +11,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const message = document.getElementById('message');
 
     // Definición de conversiones válidas / Valid conversion map
-    // NOTA: Se elimina la conversión de PDF a Word por problemas técnicos
     const validConversions = {
         word: ['pdf'],
         image: ['pdf'],
-        pdf: ['image'] // Eliminado 'word' por problemas de conversión
+        pdf: ['image'] 
     };
 
     // Actualiza las opciones disponibles en el segundo select / Update "to" options
     function actualizarOpcionesTo() {
         const fromVal = from.value;
         
-        // Primero habilitamos todas las opciones
+        //// First, enable all options/ Primero habilitamos todas las opciones
         for (let option of to.options) {
             option.disabled = false;
         }
         
-        // Luego deshabilitamos las opciones no permitidas
+        //Then we disable the non-allowed options/ Luego deshabilitamos las opciones no permitidas
         for (let option of to.options) {
             if (!validConversions[fromVal].includes(option.value)) {
                 option.disabled = true;
             }
         }
         
-        // Si la opción actual está deshabilitada, seleccionamos la primera disponible
+        //If the current option is disabled, select the first available option/ Si la opción actual está deshabilitada, seleccionamos la primera disponible
         if (to.options[to.selectedIndex].disabled) {
             for (let option of to.options) {
                 if (!option.disabled) {

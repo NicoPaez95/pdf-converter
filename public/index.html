@@ -1,5 +1,5 @@
 <!--index.html-->
-<!--This is the main HTML file for the converter.-->
+<!--This is the main HTML file for the converter. / -Este es el archivo HTML principal del convertidor.-->
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,15 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Conversor Universal</title>
   <link rel="stylesheet" href="./styles.css" />
-  <!-- Importar el script correcto al final del body para evitar bloqueo de renderizado -->
+  <!--Import the correct script at the end of the body to prevent rendering issues./ Importar el script correcto al final del body para evitar bloqueo de renderizado -->
 </head>
 
 <body>
-  <!-- Contenedor principal del conversor / Main converter container -->
+  <!--  Main converter container / Contenedor principal del conversor -->
   <div class="converter">
     <h2>Conversor de Archivos</h2>
 
-    <!-- Formulario principal de conversión / Main conversion form -->
+    <!--Main conversion form/ Formulario principal de conversión-->
     <form id="convertForm" action="/convert" method="POST" enctype="multipart/form-data">
       <label for="fromFormat">Convertir de:</label>
       <select name="fromFormat" id="fromFormat" required>
@@ -25,7 +25,7 @@
         <option value="image">Imagen</option>
       </select>
 
-      <!-- Botón de intercambio de formatos / Swap formats button -->
+      <!-- Swap formats button / Botón de intercambio de formatos -->
       <button type="button" id="swap" title="Intercambiar formatos">⇄</button>
 
       <label for="toFormat">A formato:</label>
@@ -35,25 +35,25 @@
         <option value="word">Word</option>
       </select>
 
-      <!-- Selector de archivo / File input -->
+      <!--  File input / Selector de archivo /-->
       <input type="file" name="file" id="fileInput" required accept=".doc,.docx,.png,.jpg,.jpeg,.gif,.bmp,.webp,.pdf" />
 
-      <!-- Botón para enviar / Submit button -->
+      <!-- Submit button / Botón para enviar /  -->
       <button type="submit" id="submitBtn">Convertir</button>
 
-      <!-- Mensaje de error / Error message -->
+      <!--Error message / Mensaje de error-->
       <div id="message"></div>
     </form>
   </div>
 
-  <!-- Pie de página / Footer -->
+  <!--  Footer/Pie de página / -->
   <footer>
     Desarrollado por <strong>Jose Nicolas Paez</strong> © 2024
     <a href="https://josenicolaspaez.com" target="_blank">Sobre el desarrollador</a>
   </footer>
 
   <!-- Script principal / Main script -->
-  <!-- Importamos el script al final del body para mejor rendimiento -->
+  <!-- We import the script at the end of the body for better performance/Importamos el script al final del body para mejor rendimiento -->
   <script src="./converter.js"></script>
 </body>
 
