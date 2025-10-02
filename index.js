@@ -9,7 +9,7 @@ const { PDFDocument } = require("pdf-lib");
 const archiver = require("archiver");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 //Create directories if not exist/ Crear carpetas si no existen  
 const uploadDir = path.join(__dirname, "uploads");
