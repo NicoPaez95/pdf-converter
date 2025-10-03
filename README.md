@@ -64,9 +64,9 @@ Once started, the app will be available at:
 
 ## 📬 Contact
 
-- GitHub: [@your-username](https://github.com/your-username)
-- Email: yourname@example.com
-- LinkedIn: [your-linkedin-profile](https://linkedin.com/in/yourname)
+- GitHub: [@NicoPaez95](https://github.com/NicoPaez95)
+- Email: nicopaezdev@josenicolaspaez.com
+- LinkedIn: [Jose Paez](https://www.linkedin.com/in/jose-paez-a4b954207/)
 
 ---
 ---
